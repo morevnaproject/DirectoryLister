@@ -41,6 +41,7 @@ return array(
     // Stream zip file content directly to the client, without any temporary file
     'zip_stream'                => true,
     'zip_compression_level'     => 0,
+    'zip_cache_dir'             => '',
     // Disable zip downloads for particular directories
     'zip_disable' => array(
         '.' // - disable for root directory by default

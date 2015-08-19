@@ -79,6 +79,18 @@ class DirectoryLister {
     }
     
      /**
+     * This function provides a link to download current directory as zip archive
+     *
+     * @param string $directory Relative path of directory to list
+     * @return string
+     * @access public
+     */
+    public function getZipLink() {
+        return '?zip='.$this->getDirectoryPath();
+    }
+    
+    
+     /**
      * Creates zipfile of directory
      *
      * @param string $directory Relative path of directory to list
@@ -92,6 +104,12 @@ class DirectoryLister {
             
             if ($directory != '.' && $this->_isHidden($directory)){
                 echo "Access denied.";
+            }
+            
+            $cached_zip_path = $this->_config['zip_cache_dir'] .'/'. $this->_directory.'.zip';
+            if (file_exists($cached_zip_path)) {
+                header("Location: $cached_zip_path");
+                die();
             }
             
             $filename_no_ext = basename("$directory");

@@ -163,7 +163,7 @@ class DirectoryLister {
      * @return array Array of directory being listed
      * @access public
      */
-    public function listDirectory($directory) {
+    public function listDirectory($directory, $root) {
 
         // Set directory
         $directory = $this->setDirectoryPath($directory);
@@ -174,7 +174,7 @@ class DirectoryLister {
         }
 
         // Get the directory array
-        $directoryArray = $this->_readDirectory($directory);
+        $directoryArray = $this->_readDirectory($directory, $root);
 
         // Return the array
         return $directoryArray;
@@ -541,7 +541,7 @@ class DirectoryLister {
      * @return array Array of the directory contents
      * @access protected
      */
-    protected function _readDirectory($directory, $sort = 'natcase') {
+    protected function _readDirectory($directory, $root = '') {
 
         // Initialize array
         $directoryArray = array();
@@ -589,8 +589,14 @@ class DirectoryLister {
                     }
 
                 }
+                
+                $hide_uplevel=false;
+                if ($root !== '' && substr($this->_directory, 0, strlen($root)) === $root && strlen($root)>=strlen($this->_directory)) 
+                {
+                    $hide_uplevel=true;
+                }
 
-                if ($file == '..') {
+                if ($file == '..' && !$hide_uplevel) {
 
                     if ($this->_directory != '.') {
                         // Get parent directory path
@@ -599,8 +605,11 @@ class DirectoryLister {
                         unset($pathArray[count($pathArray)-1]);
                         $directoryPath = implode('/', $pathArray);
 
+                        if ($root!='') {
+                            $rootPath = '&root='.implode('/', array_map('rawurlencode', explode('/', $root)));
+                        }
                         if (!empty($directoryPath)) {
-                            $directoryPath = '?dir=' . rawurlencode($directoryPath);
+                            $directoryPath = '?dir=' . rawurlencode($directoryPath) . $rootPath;
                         }
 
                         // Add file info to the array
@@ -621,9 +630,12 @@ class DirectoryLister {
 
                         // Build the file path
                         $urlPath = implode('/', array_map('rawurlencode', explode('/', $relativePath)));
+                        if ($root!='') {
+                            $rootPath = '&root='.implode('/', array_map('rawurlencode', explode('/', $root)));
+                        }
 
                         if (is_dir($relativePath)) {
-                            $urlPath = '?dir=' . $urlPath;
+                            $urlPath = '?dir=' . $urlPath . $rootPath;
                         } else {
                             $urlPath = $urlPath;
                         }

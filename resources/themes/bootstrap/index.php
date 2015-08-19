@@ -36,6 +36,7 @@
                 <?php $breadcrumbs = $lister->listBreadcrumbs(); ?>
 
                 <p class="navbar-text">
+                    <?php if (!isset($_GET['root'])): ?>
                     <?php foreach($breadcrumbs as $breadcrumb): ?>
                         <?php if ($breadcrumb != end($breadcrumbs)): ?>
                                 <a href="<?php echo $breadcrumb['link']; ?>"><?php echo $breadcrumb['text']; ?></a>
@@ -44,6 +45,7 @@
                             <?php echo $breadcrumb['text']; ?>
                         <?php endif; ?>
                     <?php endforeach; ?>
+                    <?php endif; ?>
                 </p>
 
                 <div class="navbar-right">

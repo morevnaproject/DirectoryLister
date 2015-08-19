@@ -29,9 +29,9 @@
 
     // Initialize the directory array
     if (isset($_GET['dir'])) {
-        $dirArray = $lister->listDirectory($_GET['dir']);
+        $dirArray = $lister->listDirectory($_GET['dir'], $_GET['root']);
     } else {
-        $dirArray = $lister->listDirectory('.');
+        $dirArray = $lister->listDirectory('.', $_GET['root']);
     }
 
     // Define theme path
